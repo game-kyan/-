@@ -10,8 +10,8 @@
 <body>
   <!-- Platform-specific Install Options -->
   <div id="installOptions">
-    <button id="installBtn" style="display:none;">Install on Android / Windows</button>
-    <a href="install.html"><button id="iosBtn" style="display:none;">Install on iOS / macOS</button></a>
+    <button id="installBtn">Install on Android / Windows</button>
+    <a href="install.html"><button id="iosBtn">Install on iOS / macOS</button></a>
   </div>
 
   <!-- Start Screen -->
@@ -43,12 +43,20 @@
     const installBtn = document.getElementById('installBtn');
     const iosBtn = document.getElementById('iosBtn');
     const startBtn = document.getElementById('startBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const startScreen = document.getElementById('startScreen');
+    const gameCanvas = document.getElementById('gameCanvas');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const finalScoreText = document.getElementById('finalScore');
 
+    // ----------------------------
+    // INSTALL BUTTONS
+    // ----------------------------
     // Android/Windows: show native install button
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (isAndroid || isWindows) installBtn.style.display = 'inline-block';
+      installBtn.style.display = 'inline-block'; // always visible for testing
     });
 
     installBtn.addEventListener('click', async () => {
@@ -60,24 +68,39 @@
       }
     });
 
-    // iOS/macOS: show button linking to install.html
-    if (isIos || isMac) iosBtn.style.display = 'inline-block';
+    // iOS/macOS: button links to install.html
+    iosBtn.style.display = 'inline-block'; // always visible for testing
 
-    // Show game canvas on Play button click
+    // ----------------------------
+    // GAME FLOW
+    // ----------------------------
     startBtn.addEventListener('click', () => {
-      document.getElementById('startScreen').style.display = 'none';
-      document.getElementById('gameCanvas').style.display = 'block';
-      // Initialize game
-      if (typeof initGame === "function") initGame();
+      startScreen.style.display = 'none';
+      gameCanvas.style.display = 'block';
+      initGame();
     });
 
-    // Restart button
-    const restartBtn = document.getElementById('restartBtn');
     restartBtn.addEventListener('click', () => {
-      document.getElementById('gameOverScreen').style.display = 'none';
-      document.getElementById('startScreen').style.display = 'block';
-      document.getElementById('gameCanvas').style.display = 'none';
+      gameOverScreen.style.display = 'none';
+      startScreen.style.display = 'block';
+      gameCanvas.style.display = 'none';
     });
+
+    // Function to show Game Over screen
+    function showGameOver(score) {
+      gameCanvas.style.display = 'none';
+      gameOverScreen.style.display = 'block';
+      finalScoreText.innerText = `Game Over! Score: ${score}`;
+    }
+
+    // ----------------------------
+    // SERVICE WORKER
+    // ----------------------------
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.log('SW registration failed:', err));
+    }
   </script>
 </body>
 </html>
