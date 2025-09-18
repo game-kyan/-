@@ -8,16 +8,76 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <!-- Platform-specific Install Options -->
+  <div id="installOptions">
+    <button id="installBtn" style="display:none;">Install on Android / Windows</button>
+    <a href="install.html"><button id="iosBtn" style="display:none;">Install on iOS / macOS</button></a>
+  </div>
+
+  <!-- Start Screen -->
   <div id="startScreen">
     <h1>Jumping Game</h1>
     <button id="startBtn">Play</button>
   </div>
+
+  <!-- Game Canvas -->
   <canvas id="gameCanvas" width="400" height="400" style="display:none;"></canvas>
+
+  <!-- Game Over Screen -->
   <div id="gameOverScreen" style="display:none;">
     <h2 id="finalScore">Game Over!</h2>
     <button id="restartBtn">Restart</button>
   </div>
 
   <script src="app.js"></script>
+
+  <script>
+    let deferredPrompt;
+
+    // Detect platform
+    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    const isMac = /macintosh/.test(window.navigator.userAgent.toLowerCase());
+    const isWindows = /win/.test(window.navigator.userAgent.toLowerCase());
+    const isAndroid = /android/.test(window.navigator.userAgent.toLowerCase());
+
+    const installBtn = document.getElementById('installBtn');
+    const iosBtn = document.getElementById('iosBtn');
+    const startBtn = document.getElementById('startBtn');
+
+    // Android/Windows: show native install button
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if (isAndroid || isWindows) installBtn.style.display = 'inline-block';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') console.log('App installed!');
+        deferredPrompt = null;
+      }
+    });
+
+    // iOS/macOS: show button linking to install.html
+    if (isIos || isMac) iosBtn.style.display = 'inline-block';
+
+    // Show game canvas on Play button click
+    startBtn.addEventListener('click', () => {
+      document.getElementById('startScreen').style.display = 'none';
+      document.getElementById('gameCanvas').style.display = 'block';
+      // Initialize game
+      if (typeof initGame === "function") initGame();
+    });
+
+    // Restart button
+    const restartBtn = document.getElementById('restartBtn');
+    restartBtn.addEventListener('click', () => {
+      document.getElementById('gameOverScreen').style.display = 'none';
+      document.getElementById('startScreen').style.display = 'block';
+      document.getElementById('gameCanvas').style.display = 'none';
+    });
+  </script>
 </body>
 </html>
