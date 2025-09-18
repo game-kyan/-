@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Install Jumping Game</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <h1>Install Jumping Game</h1>
+  <p>To install this game on your iPhone or iPad, follow these steps:</p>
+  <ol>
+    <li>Tap the <strong>Share</strong> button in Safari (the square with an arrow pointing up).</li>
+    <li>Scroll down and tap <strong>Add to Home Screen</strong>.</li>
+    <li>Confirm the name and tap <strong>Add</strong>.</li>
+  </ol>
+
+  <p>Once added, open it from your Home Screen and enjoy the game!</p>
+
+  <a href="index.html"><button>Play Game</button></a>
+
+  <script>
+    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone;
+
+    if (isIos && !isInStandaloneMode) {
+      const banner = document.createElement('div');
+      banner.innerHTML = `
+        <p>Install this game: Tap <strong>Share → Add to Home Screen</strong></p>
+      `;
+      banner.style.cssText = `
+        position: fixed;
+        bottom: 0;
+        background: #0a74da;
+        color: white;
+        padding: 15px;
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+      `;
+      document.body.appendChild(banner);
+    }
+  </script>
+</body>
+</html>

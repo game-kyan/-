@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jumping Game</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <div id="startScreen">
+    <h1>Jumping Game</h1>
+    <button id="startBtn">Play</button>
+  </div>
+  <canvas id="gameCanvas" width="400" height="400" style="display:none;"></canvas>
+  <div id="gameOverScreen" style="display:none;">
+    <h2 id="finalScore">Game Over!</h2>
+    <button id="restartBtn">Restart</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
