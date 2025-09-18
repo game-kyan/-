@@ -3,104 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jumping Game</title>
+  <title>Jumping Game Download</title>
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+
+    .platform-section {
+      display: inline-block;
+      width: 45%;
+      vertical-align: top;
+      margin: 20px 2%;
+    }
+
+    .platform-section img {
+      width: 80%;
+      max-width: 300px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+    }
+
+    .platform-buttons {
+      margin-top: 10px;
+    }
+
+    .platform-buttons button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffffff;
+      color: red;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .platform-buttons button:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
 </head>
 <body>
-  <!-- Platform-specific Install Options -->
-  <div id="installOptions">
-    <button id="installBtn">Install on Android / Windows</button>
-    <a href="install.html"><button id="iosBtn">Install on iOS / macOS</button></a>
+
+  <h1>Download our client app today to play whenever, wherever!</h1>
+
+  <!-- Desktop Section -->
+  <div class="platform-section">
+    <img src="icons/desktop.png" alt="Mac & Windows">
+    <div class="platform-buttons">
+      <button id="macBtn">MAC</button>
+      <button id="windowsBtn">WINDOWS</button>
+    </div>
   </div>
 
-  <!-- Start Screen -->
-  <div id="startScreen">
-    <h1>Jumping Game</h1>
-    <button id="startBtn">Play</button>
+  <!-- Mobile Section -->
+  <div class="platform-section">
+    <img src="icons/mobile.png" alt="iOS & Android">
+    <div class="platform-buttons">
+      <button id="iosBtn">IOS</button>
+      <button id="androidBtn">ANDROID</button>
+    </div>
   </div>
-
-  <!-- Game Canvas -->
-  <canvas id="gameCanvas" width="400" height="400" style="display:none;"></canvas>
-
-  <!-- Game Over Screen -->
-  <div id="gameOverScreen" style="display:none;">
-    <h2 id="finalScore">Game Over!</h2>
-    <button id="restartBtn">Restart</button>
-  </div>
-
-  <script src="app.js"></script>
 
   <script>
-    let deferredPrompt;
-
-    // Detect platform
-    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-    const isMac = /macintosh/.test(window.navigator.userAgent.toLowerCase());
-    const isWindows = /win/.test(window.navigator.userAgent.toLowerCase());
-    const isAndroid = /android/.test(window.navigator.userAgent.toLowerCase());
-
-    const installBtn = document.getElementById('installBtn');
-    const iosBtn = document.getElementById('iosBtn');
-    const startBtn = document.getElementById('startBtn');
-    const restartBtn = document.getElementById('restartBtn');
-    const startScreen = document.getElementById('startScreen');
-    const gameCanvas = document.getElementById('gameCanvas');
-    const gameOverScreen = document.getElementById('gameOverScreen');
-    const finalScoreText = document.getElementById('finalScore');
-
-    // ----------------------------
-    // INSTALL BUTTONS
-    // ----------------------------
-    // Android/Windows: show native install button
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = 'inline-block'; // always visible for testing
+    // For testing/demo purposes, we can show alerts or link to install.html
+    document.getElementById('macBtn').addEventListener('click', () => {
+      alert('Mac installation instructions will open.');
     });
 
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') console.log('App installed!');
-        deferredPrompt = null;
-      }
+    document.getElementById('windowsBtn').addEventListener('click', () => {
+      alert('Windows installation instructions will open.');
     });
 
-    // iOS/macOS: button links to install.html
-    iosBtn.style.display = 'inline-block'; // always visible for testing
-
-    // ----------------------------
-    // GAME FLOW
-    // ----------------------------
-    startBtn.addEventListener('click', () => {
-      startScreen.style.display = 'none';
-      gameCanvas.style.display = 'block';
-      initGame();
+    document.getElementById('iosBtn').addEventListener('click', () => {
+      window.location.href = 'install.html'; // iOS install instructions
     });
 
-    restartBtn.addEventListener('click', () => {
-      gameOverScreen.style.display = 'none';
-      startScreen.style.display = 'block';
-      gameCanvas.style.display = 'none';
+    document.getElementById('androidBtn').addEventListener('click', () => {
+      alert('Android PWA install prompt will open.');
+      // If PWA is hosted correctly, you can trigger beforeinstallprompt here
     });
-
-    // Function to show Game Over screen
-    function showGameOver(score) {
-      gameCanvas.style.display = 'none';
-      gameOverScreen.style.display = 'block';
-      finalScoreText.innerText = `Game Over! Score: ${score}`;
-    }
-
-    // ----------------------------
-    // SERVICE WORKER
-    // ----------------------------
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('Service Worker registered'))
-        .catch(err => console.log('SW registration failed:', err));
-    }
   </script>
+
 </body>
 </html>
